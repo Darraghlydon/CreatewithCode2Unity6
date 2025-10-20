@@ -2863,6 +2863,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf8135bd65e55a948a1d6b0d86f2be58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animalScoreValue: 20
 --- !u!1 &4248295678815221555
 GameObject:
   m_ObjectHideFlags: 0

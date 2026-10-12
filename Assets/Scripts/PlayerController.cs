@@ -1,22 +1,24 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class PlayerController : MonoBehaviour
 {
 
-    public float horizontalInput;
-    public float verticalInput;
+
     public float screenBoundaryValueX=18;
     public float screenBoundaryValueTop = 15;
     public float screenBoundaryValueBottom = -2;
     public float speed;
-    
-    
+
+    public InputAction moveAction;
     private Transform playerTransform;
     public GameObject projectilePrefab;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerTransform = transform;
+        moveAction.Enable();
     }
 
     // Update is called once per frame
@@ -25,16 +27,15 @@ public class PlayerController : MonoBehaviour
         HandleBoundaries();
         
         HandleInput();
-
         
     }
 
     private void HandleInput()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
-        playerTransform.Translate(Vector3.forward*(verticalInput * speed*Time.deltaTime));
-        playerTransform.Translate(Vector3.right * (horizontalInput * speed * Time.deltaTime));
+        Vector2 moveInput = moveAction.ReadValue<Vector2>();
+
+        playerTransform.Translate(Vector3.forward*(moveInput.y * speed*Time.deltaTime));
+        playerTransform.Translate(Vector3.right * (moveInput.x * speed * Time.deltaTime));
         
         if (Input.GetKeyDown(KeyCode.Space))
         {

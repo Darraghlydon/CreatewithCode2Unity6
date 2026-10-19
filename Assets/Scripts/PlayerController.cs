@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+ 
 
 public class PlayerController : MonoBehaviour
 {
@@ -65,5 +66,20 @@ public class PlayerController : MonoBehaviour
         {
             playerTransform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, screenBoundaryValueBottom);
         }
+    }
+
+
+    public void Freeze()
+    {
+        Debug.Log("Freezing");
+        speed = 0;
+        StartCoroutine("FreezeDelay");
+    }
+
+    IEnumerator FreezeDelay()
+    {
+        Debug.Log("Freezing");
+        yield return new WaitForSeconds(3);
+        speed = 30;
     }
 }

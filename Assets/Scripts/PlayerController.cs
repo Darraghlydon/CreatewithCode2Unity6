@@ -70,7 +70,10 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if other.gameObject.CompareTag("")
+        if( other.gameObject.CompareTag("Dog"))
+        {
+            Debug.Log("Ouch! You bit me!");
+        }
     }
 
 

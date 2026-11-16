@@ -9,17 +9,19 @@ public class DogMovement : MonoBehaviour
     [SerializeField]
     private Transform[] waypoints = new Transform[2];
     
+    [SerializeField]
     private Transform playerTransform;
     private Transform dogTransform;
-    
+    private AudioSource dogAudioSource;
 
 
     private float moveSpeed = 3f; 
+    private float chaseSpeed = 5f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         dogTransform = transform;
-        
+        dogAudioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -28,8 +30,15 @@ public class DogMovement : MonoBehaviour
         if (!isChasingPlayer)
         {
             HandlePatrolling();
+            
         }
-        
+        else
+        {
+            HandleChasing();
+        }
+
+      HandleVision();
+
     }
 
     void HandlePatrolling()
@@ -38,7 +47,7 @@ public class DogMovement : MonoBehaviour
         if (distanceToNextWaypoint.magnitude < 0.1f)
         {
             nextWaypointIndex = (nextWaypointIndex + 1) % waypoints.Length;
-            dogTransform.forward = waypoints[nextWaypointIndex].position - transform.position;
+            dogTransform.forward = waypoints[nextWaypointIndex].position - dogTransform.position;
             
         }
         else
@@ -46,5 +55,52 @@ public class DogMovement : MonoBehaviour
             dogTransform.position = Vector3.MoveTowards(dogTransform.position, waypoints[nextWaypointIndex].position,moveSpeed * Time.deltaTime) ;
         }
         
+    }
+
+    void HandleVision()
+    {
+        Vector3 dogForwardVector = dogTransform.forward.normalized;
+        
+        Vector3 playerVector = (playerTransform.position - transform.position);
+        if (playerVector.sqrMagnitude < 75)
+        {
+            float dotProduct = Vector3.Dot(dogForwardVector, playerVector.normalized);
+            if (dotProduct > 0.95f)
+            {
+                isChasingPlayer = true;
+                if(!dogAudioSource.isPlaying)
+                {
+                    dogAudioSource.Play();
+                }
+                    
+                    
+                
+            }
+            else
+            {
+              StopChasing();
+            }
+        }
+        else
+        {
+            StopChasing();
+        }
+    }
+
+    void HandleChasing()
+    {
+        
+        dogTransform.position = Vector3.MoveTowards(dogTransform.position, playerTransform.position,chaseSpeed * Time.deltaTime) ;
+        dogTransform.forward = playerTransform.position - dogTransform.position;
+        
+    }
+
+    
+
+    void StopChasing()
+    {
+        isChasingPlayer = false;
+        dogAudioSource.Stop();
+        dogTransform.forward = waypoints[nextWaypointIndex].position - dogTransform.position;
     }
 }

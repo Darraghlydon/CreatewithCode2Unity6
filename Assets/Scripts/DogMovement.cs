@@ -11,6 +11,7 @@ public class DogMovement : MonoBehaviour
     
     private Transform playerTransform;
     private Transform dogTransform;
+    
 
 
     private float moveSpeed = 3f; 
@@ -37,6 +38,7 @@ public class DogMovement : MonoBehaviour
         if (distanceToNextWaypoint.magnitude < 0.1f)
         {
             nextWaypointIndex = (nextWaypointIndex + 1) % waypoints.Length;
+            dogTransform.forward = waypoints[nextWaypointIndex].position - transform.position;
             
         }
         else
